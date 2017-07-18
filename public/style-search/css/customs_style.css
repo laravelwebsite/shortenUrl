@@ -1,0 +1,28 @@
+.ava-small{
+  height: 29px;
+}
+.check-in-style{
+  margin-left: 0 !important;
+  width: 130px;
+  padding: 0 0 0 5px !important;
+}
+.style-search-right .form-group{
+  display: block;
+  margin-top: 10px;
+}
+.style-search-right label, .style-search-right input, .style-search-right select, .style-search-right select option{
+  display: block;
+  width: 100% !important;
+}
+.border-left{
+  border-left: 1px solid #e1e1e1;
+}
+.border-right{
+  border-right: 1px solid #e1e1e1;
+}
+.no-margin{
+  margin:0 !important;
+}
+.no-padding{
+  padding: 0 !important;
+}
