@@ -108,6 +108,26 @@ Tracking Campaign | Shorten Link
           </div>
         </div>
         <!-- page end-->
+        <!-- Modal recordDel-->
+      <div class="modal fade" id="recordDel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Delete</h4>
+          </div>
+            <div class="modal-body">
+                Bạn có muốn xóa link trong danh sách chờ duyệt hay không?
+                <input type="hidden" id="idRecord" name="idRecord" value="">
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button class="btn btn-danger btn-delete" type="button" > Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- .modal recordDel-->
 @endsection
 
 @section('script')
@@ -174,7 +194,29 @@ Tracking Campaign | Shorten Link
                   }
               });
             });
+            
 
+            $('.btn-del-record').click(function(event) {
+              var flagId = $(this).attr('id');
+              $("input[name=idRecord]").val(flagId);
+            });
+            $('.btn-delete').click(function(event) {
+              var id = $("input[name=idRecord]").val();
+              $.ajax({
+                  url: 'user/deleteajax/',
+                  type:"GET", 
+                  cache:false,
+                  data: {
+                    "id": id
+                  },
+                  headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                  async: true,
+                  success: function(result){
+                    $('#recordDel').fadeOut('fast');
+                    location.reload();
+                  }
+              });
+            });   
            
 
       });

@@ -4,7 +4,13 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
                   <li class="sub-menu">
-                      <a href="javascript();" class="active" >
+                      <a href="javascript();" class="
+                      @if(Request::segment(2)=="statictis-seeder")
+                              {{''}}
+                        @else {{'active'}}
+                      @endif"
+                     
+                      >
                           <i class="fa fa-dashboard"></i>
                           <span>Dashboard System</span>
                       </a>
@@ -45,49 +51,35 @@
                               {{'active'}}
                           @endif"
                         ><a href="admin/add-user-sedding">Thêm user seed </a></li>
+                        <li 
+                            class="
+                          @if(Request::segment(2)=="add-category")
+                              {{'active'}}
+                          @endif"
+                        ><a href="admin/add-category">Thêm Category </a></li>
                       </ul>
                   </li>
+                 
                   <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-envelope"></i>
-                          <span>Email</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  >Inbox</a></li>
-                          <li><a  >Inbox Details</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class=" fa fa-bar-chart-o"></i>
+                      <a href="javascript:;" 
+                      class="
+                          @if(Request::segment(2)=="statictis-seeder")
+                              {{'active'}}
+                          @endif">
+                          <i class="fa fa-cogs"></i>
                           <span>Thống kê seed</span>
                       </a>
                       <ul class="sub">
-                          <li><a >Luu vi </a></li>
-                          <li><a >phi hung</a></li>
+                        @foreach($usermenu as $us)
+                          <li
+                            class="
+                          @if(Request::segment(3)=="$us->id")
+                              {{'active'}}
+                          @endif"
+                          ><a href="admin/statictis-seeder/{{$us->id}}">{{$us->name}}</a></li>
+                          @endforeach
                       </ul>
                   </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-cogs"></i>
-                          <span>User</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="admin/user/list">List User</a></li>
-                          <li><a  href="admin/user/add">Add User</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-cogs"></i>
-                          <span>Link</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="admin/link/list">List Link</a></li>
-                          <li><a  href="admin/link/add">Add Link</a></li>
-                      </ul>
-                  </li>
-
               </ul>
               <!-- sidebar menu end-->
           </div>

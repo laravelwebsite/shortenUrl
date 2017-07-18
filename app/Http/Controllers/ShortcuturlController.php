@@ -294,6 +294,7 @@ class ShortcuturlController extends Controller
 
 	public function getStatictis()
 	{
+
 		$listjob=List_job_id::all();
 		$iduser=Auth::user()->id;
 		$danhsach=Shortcut_url::where('iduser_create',$iduser)->orderBy('created_at','DESC')->paginate(10);
@@ -302,10 +303,19 @@ class ShortcuturlController extends Controller
 		{
 			return view('users.pages.statictis',['danhsach'=>$danhsach,'job_id'=>$listjob,'count'=>$count]);
 		}
-		else
+		else if(Auth::user()->role_id==2)
 		{
 			return view('subadmin.pages.statictis',['danhsach'=>$danhsach,'job_id'=>$listjob,'count'=>$count]);
 		}
+	}
+	public function getStatictisadmin($id)
+	{
+
+		$listjob=List_job_id::all();
+		$id=(int)$id;
+		$danhsachid=Shortcut_url::where('iduser_create',$id)->orderBy('created_at','DESC')->paginate(10);
+		$count=$danhsachid->count();
+		return view('admin.pages.statictis',['danhsach'=>$danhsachid,'job_id'=>$listjob,'count'=>$count]);
 	}
 	public function deleteUrl($id)
 	    {

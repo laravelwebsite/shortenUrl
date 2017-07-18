@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Dmy_statictis;
 use App\Seeder;
+use App\User;
 class Dmy_statictisController extends Controller
 {
 	 public function statictisDetail($shortcut_url)

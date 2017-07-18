@@ -14,7 +14,14 @@ class UserController extends Controller
 		$category=Category::all();
 		return view('admin.pages.adduserseed',['user'=>$user,'category'=>$category]);
 	}
-
+	public function editusersedding($id)
+	{
+		$id=(int)$id;
+		$user=User::all();
+		$category=Category::all();
+		$inforuser=User::find($id);
+		return view('admin.pages.edituserseed',['user'=>$user,'category'=>$category,'inforuser'=>$inforuser]);
+	}
 	public function getDangnhap()
 	{
 		return view('login');

@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'userLogin'=>\App\Http\Middleware\UserLoginMiddleware::class,
         'adminLogin'=>\App\Http\Middleware\AdminLoginMiddleware::class,
         'subadminLogin'=>\App\Http\Middleware\SubAdminLoginMiddleware::class,
+        'disablepreventback' => \App\Http\Middleware\DisablePreventBack::class,
     ];
 }

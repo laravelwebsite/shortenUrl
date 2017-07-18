@@ -50,7 +50,7 @@ Route::group(['prefix'=>'subadmin','middleware'=>'subadminLogin'],function(){
 	Route::get('affiliate-Track','ShortcuturlController@affiliateTrack');
 	Route::get('messengers','MessagerController@getMessager');
 	Route::get('Ajaxmessengers','AjaxController@getMessagercontent');
-	
+
 });
 Route::group(['prefix'=>'admin','middleware'=>'adminLogin'],function(){
 
@@ -67,7 +67,15 @@ Route::group(['prefix'=>'admin','middleware'=>'adminLogin'],function(){
 	Route::get('searchwithjobAffiate','AjaxController@searchwithjobAffiate');
 	Route::get('sent-messenger','MessagerController@sentmessenger');
 	Route::get('add-user-sedding','UserController@addusersedding');
-	Route::get('adduser','AjaxController@adduser');
+	Route::get('edit-user-sedding/{id}','UserController@editusersedding');
+	Route::get('statictis-seeder/{id}','ShortcuturlController@getStatictisadmin');
+	Route::get('deleteuserajax','AjaxController@deleteuserajax');
+	Route::get('add-category','CategoryController@addCategory');
+	Route::post('addcategory','AjaxController@addCategory');
+	Route::post('deletecateajax','AjaxController@deleteCategory');
+	Route::get('edit-category/{id}','CategoryController@editCategory');
+
+	Route::post('adduser','AjaxController@adduser');
 	Route::group(['prefix'=>'user'],function(){
 		Route::get('list','UserController@getList');
 		Route::get('add','UserController@getAdd');

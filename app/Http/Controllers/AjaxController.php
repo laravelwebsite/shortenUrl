@@ -9,8 +9,41 @@ use App\Messager;
 use App\User;
 use File;
 use Carbon\Carbon;
+use App\Category;
 class AjaxController extends Controller
 {
+    public function addCategory(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id && $request->id!="")
+            {
+                $id=(int)$request->id;
+                $cate=Category::find($id);
+                $cate->categoryname=$request->categoryname;
+                $cate->save();
+                $res = "update";
+            }
+            else
+            {
+                $cate=new Category;
+                $idcatemax=Category::max('id');
+                $cate->id=$idcatemax+1;
+                $cate->categoryname=$request->categoryname;
+                $cate->save();
+                $res = "add";
+            }
+            
+            echo json_encode($res);
+        }
+    }
+    public function deleteCategory(Request $request)
+    {
+        if($request->ajax()){
+            $id=(int)$request->id;
+            $cate=Category::find($id);
+            $cate->delete();
+        }
+    }
     public function getMessagercontent(Request $request)
     {
     	
@@ -20,12 +53,56 @@ class AjaxController extends Controller
             return response()->json($info);
         }
     }
-    public function adduser(Request $request)
+
+    public function deleteuserajax(Request $request)
     {
         if($request->ajax())
         {
+            $id=(int)$request->id;
+            $user=User::find($id);
+            $user->delete();
             
         }
+    }
+    public function adduser(Request $request)
+    {
+        
+        if($request->ajax())
+        {
+            if($request->id && $request->id!="")
+            {
+                $id=(int)$request->id;
+                $user=User::find($id);
+                $user->email=$request->email;
+                $user->name=$request->username;
+                $user->role_id=$request->role_id;
+                $user->phone=$request->phone;
+                $user->email_affiliate=$request->email_affiliate;
+                $user->password=bcrypt($request->password);
+                $user->in_seeder=implode('|',$request->in_seeder);//array -> string
+                $user->in_category=implode('|',$request->in_category);
+                $user->save();
+                $res="update";
+            }
+            else
+            {
+                $user=new User;
+                $idmax=User::max('id');
+                $user->id=$idmax+1;
+                $user->email=$request->email;
+                $user->name=$request->username;
+                $user->role_id=$request->role_id;
+                $user->phone=$request->phone;
+                $user->email_affiliate=$request->email_affiliate;
+                $user->password=bcrypt($request->password);
+                $user->in_seeder=implode('|',$request->in_seeder);//array -> string
+                $user->in_category=implode('|',$request->in_category);
+                $user->save();
+                $res = array('status' => 'success', 'data' => '<div class="alert alert-success alert-block fade in"><h4><i class="fa fa-ok-sign"></i> Success!</h4><p>Add user complete</p></div>');
+            }
+            echo json_encode($res);
+        }
+
     }
     public function deleteUrl(Request $request)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Link;
 use App\Count;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 class LinkController extends Controller
 {
