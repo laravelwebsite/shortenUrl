@@ -8,5 +8,5 @@ class List_job_id extends Eloquent
 {
     protected $connection="mongodb";
     protected $collection="list_job_ids";
-    protected $primaryKey = "id";
+    protected $primaryKey = "_id";
 }

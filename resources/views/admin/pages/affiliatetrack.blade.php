@@ -47,7 +47,7 @@ Tracking Campaign | Shorten Link
                   <tbody>
                     <?php $stt = 1;?>
                       @foreach($track1 as $tr)
-                        <?php $shorturl= $_SERVER['SERVER_NAME'].$tr->shortcut_url ?>
+                        <?php $shorturl= $_SERVER['SERVER_NAME']."/".$tr->shortcut_url ?>
                     <tr>
                       <td><span>{{$stt++}}</span></td>
                       <td><span>{{$tr->job_id}}</span></td>

@@ -54,7 +54,7 @@ Tracking Campaign | Shorten Link
                   <tbody>
                     <?php $stt = 1;?>
                       @foreach($track as $tr)
-                      <?php $shorturl= $_SERVER['SERVER_NAME'].$tr->shortcut_url  ?>
+                      <?php $shorturl= $_SERVER['SERVER_NAME']."/".$tr->shortcut_url  ?>
                     <tr>
                       <td><span>{{$stt++}}</span></td>
                       <td><span>{{$tr->job_id}}</span></td>
@@ -90,7 +90,8 @@ Tracking Campaign | Shorten Link
                 <div class="row-fluid">
                   <div class="col-sm-3 col-md-3 col-lg-3">
                     <div class="dataTables_info">
-                    <p></p><ul><li>{{$tr->count()}} results</li></ul><p></p>
+                    <p></p><ul><li>{{$count}} results
+                    </li></ul><p></p>
                     </div>
                   </div>
                   <div class="col-sm-9 col-md-9 col-lg-9">

@@ -1,107 +1,81 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-<head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shorten URL</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <base href="{{asset(' ')}}" >
-    <title>@yield('title')</title>
+    <!-- Bootstrap CSS -->
+    <link href="css-js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css-js/style.css">
+    <script src="css-js/jquery.min.js"></script>
+    <script type="text/javascript" src="css-js/bootstrap-filestyle.js"></script>
+    <?php 
+      if(isset($inforurl->title) && isset($inforurl->description) && isset($inforurl->fileUpload_name)){
+          echo '<meta property="og:image" content="'.'http://'.$_SERVER['SERVER_NAME'].'images/'.$inforurl->fileUpload_name.'" />';
+          echo '<meta property="og:url" content="'.'http://'.$_SERVER['SERVER_NAME'].$inforurl->shortcut_url.'" />';
+          echo '<meta property="og:type" content="website" />';
+          echo '<meta property="og:title" content="'.htmlentities($inforurl->title).'" />';
+          echo '<meta property="og:description" content="'.htmlentities($inforurl->description).'" />';
+          echo '<meta property="fb:app_id" content="848400658529425" />';
+          echo '<script>jQuery(document).ready(function($){ window.location.href = "'.$inforurl->redirect.'";});</script>';
+        }
+        else
+        {
+          header("Location: ".$inforurl->redirect);
+        }
 
-    <!-- Bootstrap Core CSS -->
-    <link href="frontend/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="frontend/css/shop-homepage.css" rel="stylesheet">
-    <link href="frontend/css/my.css" rel="stylesheet">
-    @yield('css')
-</head>
-<body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">Make Short Link</a>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="#">About</a>
-        </li>
-        <li>
-          <a href="lienhe">Contact</a>
-        </li>
-      </ul>
-     <ul class="nav navbar-nav pull-right">
-     @if(!Auth::user())
-       <li>
-        <a href="dangky">Sign up</a>
-      </li>
-      <li>
-        <a href="dangnhap">Sign in</a>
-      </li>
-      @else
-      <li>
-       <a>
-        <span class ="glyphicon glyphicon-user"></span>
-        {{Auth::user()->name}}
-      </a>
-    </li>
-
-    <li>
-     <a href="dangxuat">Đăng xuất</a>
-   </li>
-   @endif
- </ul>
-</div>
-
-
-
-<!-- /.navbar-collapse -->
-</div>
-<!-- /.container -->
-</nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9 col-md-offset-2">
-
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                      <h3 class="panel-title" style="margin:50px;font-weight: bold;color: red">Login to use.........please!!</h3>
-                  </div>
-                  <div class="panel-body">
-                        <form class="form-horizontal">
-
-                              <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-                                <div class="col-sm-10">
-                                  <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-                              </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-                            <div class="col-sm-10">
-                              <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-default">Sign in</button>
-                          <a href="#"><button type="button" class="btn btn-success">Sign up</button></a>
-                          </div>
-                      </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-</div>
-</body>
+      
+      function check_link($link){
+        //global $database->shortcut_url;
+        $cursor = $database->shortcut_url->find(array('redirect' => $link));
+        foreach ($cursor as $document) {
+          $redirect = $document["redirect"];
+          if ($redirect  == $link) {
+            $shortcut_url = $document['shortcut_url'];
+            return true;
+            break;
+          }
+        }
+      }
+      function get_params($index){
+        $uri = $_SERVER["REQUEST_URI"];
+        $tmp = explode('/', $uri);
+        if(isset($tmp[$index])){
+          return $tmp[$index];
+        }
+        return null;
+      }
+    ?>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '176808162672464',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+      };
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <!-- jQuery -->
+    <script src="css-js/jquery.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="css-js/bootstrap/js/bootstrap.min.js"></script>
+  </body>
 </html>

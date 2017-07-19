@@ -28,7 +28,7 @@ Tạo link
                 @endif
                 @if(session('thongbao'))
                 <div class="alert alert-success">
-                  <strong>{{session('thongbao')}}</strong>
+                  <strong>{!! session('thongbao') !!}</strong>
               </div>
               @endif
                 @if(session('loi'))
@@ -39,7 +39,7 @@ Tạo link
               <input type="hidden" name="_token" value="{{csrf_token()}}">
                            
                   <div class="form-group ">
-                    <label for="curl" class="control-label col-lg-2">Đường dẫn cần rút gọn </label>
+                    <label for="curl" class="control-label col-lg-2">Đường dẫn cần rút gọn</label>
                     <div class="col-lg-10">
                       <input class="form-control " id="curl" type="url" name="url" required=""  placeholder="http://example.com">
                     </div>

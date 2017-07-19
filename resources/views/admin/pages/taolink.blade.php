@@ -38,7 +38,7 @@ Tạo link Admin
           @endif
           <input type="hidden" name="_token" value="{{csrf_token()}}">
           <div class="form-group flag-seeder">
-            <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">User Seeders</label>
+            <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">User Seeders </label>
             <div class="col-lg-10 userItem">
               @foreach($user as $us)
               <label class="checkbox-inline no-padding-left"><input type="checkbox" id="seeder_id" name="seeder_id[]" value="{{$us->id}}"> {{$us->name}}</label>

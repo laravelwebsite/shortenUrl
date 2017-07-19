@@ -59,11 +59,13 @@ Thống kê chi tiết
                           <tbody>
                           <?php  $sttd= 1;?>
                           @foreach($dmy_statictis as $dmy)
+                          @if(!isset($dmy->date_week) && !isset($dmy->date_month))
                             <tr>
                               <td><span>{{$sttd++}}</span></td>
-                              <td><p>{{$dmy->date_statictis}}</p></td>
+                              <td><p>{{$dmy->date_statistic}}</p></td>
                               <td class="text-center"><span>{{$dmy->count_click}}</span></td>
                             </tr>
+                            @endif
                           @endforeach
                           </tbody>
                         </table>
@@ -89,11 +91,13 @@ Thống kê chi tiết
                           <tbody>
                             <?php  $sttw= 1;?>
                           @foreach($dmy_statictis as $dmy)
+                          @if(!isset($dmy->date_statistic) && !isset($dmy->date_month))
                             <tr>
                               <td><span>{{$sttw++}}</span></td>
                               <td><p>{{$dmy->date_week}}</p></td>
                               <td class="text-center"><span>{{$dmy->count_click}}</span></td>
                             </tr>
+                            @endif
                           @endforeach
                           </tbody>
                         </table>
@@ -119,11 +123,13 @@ Thống kê chi tiết
                           <tbody>
                             <?php  $sttm= 1;?>
                           @foreach($dmy_statictis as $dmy)
+                          @if(!isset($dmy->date_statistic) && !isset($dmy->date_week))
                             <tr>
                               <td><span>{{$sttm++}}</span></td>
                               <td><p>{{$dmy->date_month}}</p></td>
                               <td class="text-center"><span>{{$dmy->count_click}}</span></td>
                             </tr>
+                            @endif
                           @endforeach
                           </tbody>
                         </table>

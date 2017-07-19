@@ -7,9 +7,128 @@ use App\Shortcut_url;
 use App\List_job_id;
 use App\User;
 use App\Category;
+use App\Seeder;
+use App\Dmy_statictis;
 class ShortcuturlController extends Controller
 {
+	public function getReallink(Request $request,$string)
+	{
+		$urlrandom=$string;
+		//co rat nhieu row urlrandom giống nhau,khi cập nhật count_click thì cập nhật tất cả các row,nhưng chỉ truyền 1 row duy nhat ra view 
+		$urlinfor=Shortcut_url::where('shortcut_url',$urlrandom)->where('wait_check',1)->get();
+		if(count($urlinfor)==0)
+		{
+			header("Location: https://topdev.vn/"); die;
+		}
+		else
+		{
+			$inforurl=Shortcut_url::where('shortcut_url',$urlrandom)->where('wait_check',1)->first();//lấy ra 1 dòng duy nhất truyền ra view để lấy thông tin
+			//update count_click cho tất cả các dòng có shortcut_url giong nhau
+			foreach($urlinfor as $url)
+			{
+				$url->count_click=($url->count_click)+1;
+				$url->save();
+			}
+			//luu tru cookie :setcookie($name, $value, $expire, $path, $domain)
+		         setcookie($inforurl->shortcut_url, $inforurl->shortcut_url, time() + (86400 * 1), "/"); // 86400 = 1 day
+		         //data seeder(xem trang gioi thieu)
+		          if(isset($_SERVER['HTTP_REFERER'])){
+		            if(strlen($_SERVER['HTTP_REFERER']) == 0){
+		              $referer = 'http://'.$_SERVER['SERVER_NAME'];//nhập url trực tiếp thì lấy servername lam trang gioi thieu
+		            }
+		            else
+		            {
+		              $referer = $_SERVER['HTTP_REFERER'];//neu co trang gioi thieu thi lay 
+		            }
+		          }
+		          else $referer = 'http://'.$_SERVER['SERVER_NAME'];
+		          $seed=Seeder::where('referer',$referer)->first();
+		          //neu co row seed nay roi thi update
+		          if(count($seed)>0)
+		          {
+		          		$seed->shortcut_url=$urlrandom;
+		          		$seed->referer=$referer;
+		          		$seed->count_click=$seed->count_click+1;
+		          		$seed->save();
+		          }
+		          else//chua co thi insert
+		          {
+		          		$seed=new Seeder;
+		          		$ids=Seeder::max('id');
+		          		$seed->id=$ids+1;
+		          		$seed->shortcut_url=$urlrandom;
+		          		$seed->referer=$referer;
+		          		$seed->count_click=1;
+		          		$seed->save();
+		          }
+
+
+		          $time_now = time();
+		          /*date month year statictis*/
+		          $dateNow = date('d-m-Y', $time_now);
+
+		          $dmy=Dmy_statictis::where('shortcut_url',$urlrandom)->where('date_statistic',$dateNow)->first();
+		          if(count($dmy)>0)//update khi con trong ngay
+		          {
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=(int)$dmy->count_click+1;
+		          		$dmy->save();
+		          }
+		          else
+		          {
+		          		$dmy=new Dmy_statictis;
+		          		$dmyid=Dmy_statictis::max('id');
+		          		$dmy->id=$dmyid+1;
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=1;
+		          		$dmy->date_statistic=$dateNow;
+		          		$dmy->save();
+		          }
+		          //week
+		          $dateW = date('W', $time_now);
+		          $dmy=Dmy_statictis::where('shortcut_url',$urlrandom)->where('date_week',$dateW)->first();
+		          if(count($dmy)>0)//update khi con trong ngay
+		          {
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=$dmy->count_click+1;
+		          		$dmy->save();
+		          }
+		          else
+		          {
+		          		$dmy=new Dmy_statictis;
+		          		$dmyid=Dmy_statictis::max('id');
+		          		$dmy->id=$dmyid+1;
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=1;
+		          		$dmy->date_week=$dateW;
+		          		$dmy->save();
+		          }
+
+		          $dateM = date('m', $time_now);
+		          $dmy=Dmy_statictis::where('shortcut_url',$urlrandom)->where('date_month',$dateM)->first();
+		          if(count($dmy)>0)//update khi con trong ngay
+		          {
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=$dmy->count_click+1;
+		          		$dmy->save();
+		          }
+		          else
+		          {
+		          		$dmy=new Dmy_statictis;
+		          		$dmyid=Dmy_statictis::max('id');
+		          		$dmy->id=$dmyid+1;
+		          		$dmy->shortcut_url=$urlrandom;
+		          		$dmy->count_click=1;
+		          		$dmy->date_month=$dateM;
+		          		$dmy->save();
+		          } 
+		          /*end date month year statictis*/
+					
+		}
+		return view('welcome',['inforurl'=>$inforurl]);
+	}
     	public function getTaolink()
+	
 	{
 		if(Auth::user()->role_id==0)
 		{
@@ -73,53 +192,60 @@ class ShortcuturlController extends Controller
 		}
 		$links->shortcut_url=$random;
 			if($request->hasFile('fileUpload'))
+			{
+				$file=$request->file('fileUpload');
+				$name=$file->getClientOriginalName();//lay ra ten file
+				$duoi=$file->getClientOriginalExtension();//llay ra duoi file
+				if($duoi!= 'png' && $duoi != 'jpg' && $duoi != 'jpeg')
 				{
-					$file=$request->file('fileUpload');
-				            $name=$file->getClientOriginalName();//lay ra ten file
-				            $duoi=$file->getClientOriginalExtension();//llay ra duoi file
-				            if($duoi!= 'png' && $duoi != 'jpg' && $duoi != 'jpeg')
-				            {
-				            	return redirect('/')->with('loi','Định dạng đuôi file không đúng.Bạn chỉ được upload file có đuôi jpg,jpeg,png');
-				            }
-				            $hinh=str_random(10)."_".$name;//random  va noi dau _ de khong trung ten
-				            while(file_exists("upload/imagesupload/".$hinh))//neu van trung thi random tiep
-				            {
-				            	$hinh=str_random(10)."_".$name;
-				            }
-				            $file->move('upload/imagesupload',$hinh);//vi tri luu va ten file
-				            $links->fileupload_name=$hinh;
-			        	}
-				else
-				{
-				        	$links->fileupload_name="";
+				            return redirect('/')->with('loi','Định dạng đuôi file không đúng.Bạn chỉ được upload file có đuôi jpg,jpeg,png');
 				}
+				$hinh=str_random(10)."_".$name;//random  va noi dau _ de khong trung ten
+				while(file_exists("upload/imagesupload/".$hinh))//neu van trung thi random tiep
+				{
+				            $hinh=str_random(10)."_".$name;
+				}
+				$file->move('upload/imagesupload',$hinh);//vi tri luu va ten file
+				$links->fileupload_name=$hinh;
+			 }
+			else
+			{
+				$links->fileupload_name="";
+			}
 			$links->title=$request->title;
 			$links->description=$request->description;
 			$links->date_begin_seeder=$request->date_begin_seeder;
 			$links->id_user_seeder=-1;
 			$links->category_id=9;
 			if ($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, 'detail-jobs') !== FALSE)
-			      {
+			{
 
 			        // $links_redirect = $defaultLink.'/?seeder_id='.$this->session->userdata('user_id');
-				        if($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') === FALSE ) $links_redirect = $defaultLink.'/?seeder_id='.Auth::user()->id;
-				        elseif($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') !== FALSE ) $links_redirect = $defaultLink.'&seeder_id='.Auth::user()->id;
-				        
+				if($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') === FALSE ) $links_redirect = $defaultLink.'/?seeder_id='.Auth::user()->id;
+				elseif($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') !== FALSE ) $links_redirect = $defaultLink.'&seeder_id='.Auth::user()->id;
+				$whatIWant=(int)getJobid($defaultLink);
+				 //cap nhat vao table jobid
+				$job=List_job_id::where('job_id',$whatIWant);
+				if($job->count()==0 && $whatIWant!="")//chua co trong table
+				{
+					$jobid= new List_job_id;
+					$jobid->job_id=$whatIWant;
+					$jobid->save();
 
-				        $whatIWant = substr($defaultLink,strrpos($defaultLink, "-") + 1);
-				        if(strpos($whatIWant, '//?token') !== FALSE) $whatIWant = stristr($whatIWant, '//?token', true);
-				        elseif(strpos($whatIWant, '/?token') !== FALSE) $whatIWant = stristr($whatIWant, '/?token', true);
-				        elseif(strpos($whatIWant, '?token') !== FALSE) $whatIWant = stristr($whatIWant, '?token', true);
-				        
-				        if(strpos($whatIWant, '//?seeder_id') !== FALSE) $whatIWant = stristr($whatIWant, '//?seeder_id', true);
-				        elseif(strpos($whatIWant, '/?seeder_id') !== FALSE) $whatIWant = stristr($whatIWant, '/?seeder_id', true);
-				        
-				       $links->job_id= $whatIWant;
-			      }
-			      else 
-			      {
-			      	        $links_redirect = $defaultLink;
-			      }
+				}
+				if($whatIWant!="")
+				{
+					$links->job_id= $whatIWant;
+				}
+				else
+				{
+					$links->job_id= "N/A";
+				}
+			}
+			else 
+			{
+			      	$links_redirect = $defaultLink;
+			}
 			$links->redirect=$links_redirect;
 			$links->save();
 			if(Auth::user()->role_id==0)
@@ -170,11 +296,25 @@ class ShortcuturlController extends Controller
 		else
 		{
 			$links->job_id=$request->job_id;
+			//cat ra luu vao list_job_ids
+			$jobid=explode( ',' , $request->job_id);
+			foreach($jobid as $id)
+			{
+				$job=List_job_id::where('job_id',$id);
+				if($job->count()==0 && $id!="")//chua co trong table
+				{
+					$jobid= new List_job_id;
+					$jobid->job_id=$id;
+					$jobid->save();
+
+				}
+			}
 		}
+
 		if($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') === FALSE ) $links_redirect = $defaultLink.'/?seeder_id='.Auth::user()->id;
-		        elseif($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') !== FALSE ) $links_redirect = $defaultLink.'&seeder_id='.Auth::user()->id;
-		        elseif($parse_url['host'] == 'topdev.vn' && strpos($redirect, 'detail-jobs') !== FALSE) $links_redirect = $defaultLink.'/?seeder_id='.Auth::user()->id;
-		        else $links_redirect = $defaultLink;
+		elseif($parse_url['host'] == 'topdev.vn' && strpos($defaultLink, '?token') !== FALSE ) $links_redirect = $defaultLink.'&seeder_id='.Auth::user()->id;
+		elseif($parse_url['host'] == 'topdev.vn' && strpos($redirect, 'detail-jobs') !== FALSE) $links_redirect = $defaultLink.'/?seeder_id='.Auth::user()->id;
+		else $links_redirect = $defaultLink;
 
 		$links->redirect= $links_redirect;
 		if($request->category==3 || $request->category=9)
@@ -351,14 +491,15 @@ class ShortcuturlController extends Controller
 	public function trackCampaign()
 	{
 		$track =Shortcut_url::where('wait_check',1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
+		$count=count($track);
 		$category =Category::all();
 		if(Auth::user()->role_id==1)
 		{
-			return view('admin.pages.trackcampaign',['track'=>$track,'category'=>$category]);
+			return view('admin.pages.trackcampaign',['track'=>$track,'category'=>$category,'count'=>$count]);
 		}
 		else
 		{
-			return view('subadmin.pages.trackcampaign',['track'=>$track,'category'=>$category]);
+			return view('subadmin.pages.trackcampaign',['track'=>$track,'category'=>$category,'count'=>$count]);
 		}
 	}
 	public function affiliateTrack()

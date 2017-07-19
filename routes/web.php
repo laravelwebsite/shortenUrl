@@ -10,25 +10,15 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*Route::get('/', 'PagesController@index');
-Route::get('home', 'PagesController@index');
-Route::get('trangchu', 'PagesController@index');
-Route::get('dangky', 'PagesController@getDangky');
-Route::post('dangky', 'PagesController@postDangky');
-Route::post('dangnhap', 'PagesController@postDangnhap');
-Route::get('dangxuat', 'PagesController@getDangxuat');
-Route::get('{string}','PagesController@getRealink');
-Route::group(['prefix'=>'trangchu','middleware'=>'userLogin'],function(){
-	Route::get('taolink','PagesController@getTaolink');
-	Route::post('taolink','PagesController@postTaolink');
-	Route::get('list','PagesController@getList');
-});
-*/
+
 Route::get('/','UserController@getDangnhap');
+
 Route::get('home','UserController@getDangnhap');
+Route::get('index.php','UserController@getDangnhap');
 Route::get('trangchu','UserController@getDangnhap');
 Route::post('login','UserController@postDangnhap');
 Route::get('logout','UserController@getLogout');
+Route::get('/{string}','ShortcuturlController@getReallink');
 
 Route::group(['prefix'=>'user','middleware'=>'userLogin'],function(){
 	Route::get('taolink','ShortcuturlController@getTaolink');
@@ -76,20 +66,4 @@ Route::group(['prefix'=>'admin','middleware'=>'adminLogin'],function(){
 	Route::get('edit-category/{id}','CategoryController@editCategory');
 
 	Route::post('adduser','AjaxController@adduser');
-	Route::group(['prefix'=>'user'],function(){
-		Route::get('list','UserController@getList');
-		Route::get('add','UserController@getAdd');
-		Route::post('add','UserController@postAdd');
-		Route::get('edit/{id}','UserController@getEdit');
-		Route::post('edit/{id}','UserController@postEdit');
-		Route::get('delete/{id}','UserController@getDelete');
-	});
-	Route::group(['prefix'=>'link'],function(){
-		Route::get('list','LinkController@getList');
-		Route::get('add','LinkController@getAdd');
-		Route::post('add','LinkController@postAdd');
-		Route::get('edit/{id}','LinkController@getEdit');
-		Route::post('edit/{id}','LinkController@postEdit');
-		Route::get('delete/{id}','LinkController@getDelete');
-	});
 });

@@ -8,6 +8,8 @@ use App\Shortcut_url;
 use App\Messager;
 use App\User;
 use File;
+use App\Seeder;
+use App\Dmy_statictis;
 use Carbon\Carbon;
 use App\Category;
 class AjaxController extends Controller
@@ -127,7 +129,22 @@ class AjaxController extends Controller
                     File::delete($folderHinhanh);
                 }
             }
-            $response=$info->delete();
+            
+
+            //xoa o cac table kia
+
+            $seed=Seeder::where('shortcut_url',$info->shortcut_url)->get();
+            if(count($seed)>0)
+            {
+                $seed->delete();
+            }
+
+            $dmy=Dmy_statictis::where('shortcut_url',$info->shortcut_url)->get();
+            if(count($dmy)>0)
+            {
+                $dmy->delete();
+            }
+            $info->delete();
         }
     }
     public function ListCheck(Request $request)
