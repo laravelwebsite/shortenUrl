@@ -25,6 +25,7 @@ Route::group(['prefix'=>'user','middleware'=>'userLogin'],function(){
 	Route::post('taolink','ShortcuturlController@postTaolink');
 	Route::get('statictis','ShortcuturlController@getStatictis');
 	Route::get('deleteajax','AjaxController@deleteUrl');
+	Route::get('searchwithjobStatictis','AjaxController@searchwithjobStatictis');
 	Route::get('statictis-details/{shortcut_url}','Dmy_statictisController@statictisDetail');
 	Route::get('affiliateTracking','ShortcuturlController@affiliateTracking');
 	Route::get('messengers','MessagerController@getMessager');
@@ -52,7 +53,7 @@ Route::group(['prefix'=>'admin','middleware'=>'adminLogin'],function(){
 	Route::get('UpContSeeder','AjaxController@UpContSeeder');
 	Route::get('trackCampaign','ShortcuturlController@trackCampaign');
 	Route::get('statictis-details/{shortcut_url}','Dmy_statictisController@statictisDetail');
-	Route::get('searchwithjob','AjaxController@searchwithjob');
+	Route::get('searchwithjobTrackcampaign','AjaxController@searchwithjobTrackcampaign');
 	Route::get('affiliate-Track','ShortcuturlController@affiliateTrack');
 	Route::get('searchwithjobAffiate','AjaxController@searchwithjobAffiate');
 	Route::get('sent-messenger','MessagerController@sentmessenger');

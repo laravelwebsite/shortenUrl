@@ -15,7 +15,7 @@ class CreateDmyStatictisTable extends Migration
     {
         Schema::create('dmy_statictis', function (Blueprint $table) {
             $table->increments('id');
-            $table->int('idshortcut');
+            $table->int('shortcut_url');
             $table->date('date_statictis');
             $table->int('count_click');
             $table->timestamps();

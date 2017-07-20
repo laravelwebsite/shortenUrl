@@ -39,44 +39,29 @@
     <link href="style-shorten/css/style-responsive.css" rel="stylesheet" />
     <script type="text/javascript" src="style-shorten/assets/ckeditor/ckeditor.js"></script>
   <style type="text/css" media="screen">
-    .btn-file-style{
-      display: block;
-      border: 1px solid rgba(150, 160, 180, 0.3);
-      padding: 6px;
-      border-radius: 4px;
-    }
-    .help-block-style{
-      color: #a94442;
-      font-size: 10px;
-    }
-    .no-padding-left{
-      padding-left: 0;
-    }
-    .flag-fb-seeder, .flag-seeder{
-      display: none;
-    }
-    .input-group-addon-style i.fa{
-      font-size: 20px;
-      width: 20px;
-    }
-    .active-mess{
-      background-color: red;
-    }
+    .btn-file-style{display: block;border: 1px solid rgba(150, 160, 180, 0.3);padding: 6px;border-radius: 4px;}
+    .help-block-style{color: #a94442;font-size: 10px;}
+    .no-padding-left{padding-left: 0;}
+    .flag-fb-seeder, .flag-seeder{display: none;}
+    .input-group-addon-style i.fa{font-size: 20px;width: 20px;}
+    .active-mess{background-color: red;}
   </style>
-
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
-    <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
-    <![endif]-->
   </head>
 
   <body>
 
   <section id="container" >
-    @include('subadmin.layout.header')
-    @include('subadmin.layout.menu')
+    @include('header')
+
+    @if(Auth::user()->role_id==1)
+        @include('admin.layout.menu')
+    @endif
+    @if(Auth::user()->role_id==0)
+        @include('users.layout.menu')
+    @endif
+    @if(Auth::user()->role_id==2)
+        @include('subadmin.layout.menu')
+    @endif
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
@@ -85,9 +70,9 @@
       </section>
       <!--main content end-->
 
-      @include('subadmin.layout.slidebar')
+      @include('slidebar')
 
-      @include('subadmin.layout.footer')
+      @include('footer')
   </section>
 @yield('script')
   </body>

@@ -15,14 +15,14 @@ class ShortcuturlController extends Controller
 	{
 		$urlrandom=$string;
 		//co rat nhieu row urlrandom giống nhau,khi cập nhật count_click thì cập nhật tất cả các row,nhưng chỉ truyền 1 row duy nhat ra view 
-		$urlinfor=Shortcut_url::where('shortcut_url',$urlrandom)->where('wait_check',1)->get();
+		$urlinfor=Shortcut_url::where('shortcut_url',$urlrandom)->get();
 		if(count($urlinfor)==0)
 		{
 			header("Location: https://topdev.vn/"); die;
 		}
 		else
 		{
-			$inforurl=Shortcut_url::where('shortcut_url',$urlrandom)->where('wait_check',1)->first();//lấy ra 1 dòng duy nhất truyền ra view để lấy thông tin
+			$inforurl=Shortcut_url::where('shortcut_url',$urlrandom)->first();//lấy ra 1 dòng duy nhất truyền ra view để lấy thông tin
 			//update count_click cho tất cả các dòng có shortcut_url giong nhau
 			foreach($urlinfor as $url)
 			{
@@ -125,7 +125,7 @@ class ShortcuturlController extends Controller
 		          /*end date month year statictis*/
 					
 		}
-		return view('welcome',['inforurl'=>$inforurl]);
+		return view('getreallink',['inforurl'=>$inforurl]);
 	}
     	public function getTaolink()
 	
@@ -167,7 +167,7 @@ class ShortcuturlController extends Controller
 		}
 		else
 		{
-			$links->job_id=$request->job_id;
+			$links->job_id=(string)$request->job_id;
 		}
 		$links->iduser_create=Auth::user()->id;
 		//subadmin thi khoi duyet
@@ -229,13 +229,13 @@ class ShortcuturlController extends Controller
 				if($job->count()==0 && $whatIWant!="")//chua co trong table
 				{
 					$jobid= new List_job_id;
-					$jobid->job_id=$whatIWant;
+					$jobid->job_id=(int)$whatIWant;
 					$jobid->save();
 
 				}
 				if($whatIWant!="")
 				{
-					$links->job_id= $whatIWant;
+					$links->job_id=(string)$whatIWant;
 				}
 				else
 				{
@@ -281,7 +281,7 @@ class ShortcuturlController extends Controller
 			$check=Shortcut_url::where('shortcut_url',$random)->first();
 		}
 		$links->shortcut_url=$random;
-		$links->category_id=$request->category;
+		$links->category_id=(int)$request->category;
 		$links->purpose=$request->purpose;
 		$links->iduser_create=Auth::user()->id;
 		$links->email_user   = Auth::user()->email;
@@ -295,7 +295,7 @@ class ShortcuturlController extends Controller
 		}
 		else
 		{
-			$links->job_id=$request->job_id;
+			$links->job_id=(string)$request->job_id;
 			//cat ra luu vao list_job_ids
 			$jobid=explode( ',' , $request->job_id);
 			foreach($jobid as $id)
@@ -357,7 +357,7 @@ class ShortcuturlController extends Controller
 						  $idlink1=$idlink1+1;
 						  $links->id=$idlink1;
 						  $links->shortcut_url=$random;
-						  $links->category_id=$request->category;
+						  $links->category_id=(int)$request->category;
 						  $links->purpose=$request->purpose;
 						  $links->iduser_create=Auth::user()->id;
 						  $links->email_user   = Auth::user()->email;
@@ -373,7 +373,7 @@ class ShortcuturlController extends Controller
 						}
 						else
 						{
-							$links->job_id=$request->job_id;
+							$links->job_id=(string)$request->job_id;
 						}
 						  if($request->hasFile('fileUpload'))
 						{
@@ -439,14 +439,7 @@ class ShortcuturlController extends Controller
 		$iduser=Auth::user()->id;
 		$danhsach=Shortcut_url::where('iduser_create',$iduser)->orderBy('created_at','DESC')->paginate(10);
 		$count=$danhsach->count();
-		if(Auth::user()->role_id==0)
-		{
-			return view('users.pages.statictis',['danhsach'=>$danhsach,'job_id'=>$listjob,'count'=>$count]);
-		}
-		else if(Auth::user()->role_id==2)
-		{
-			return view('subadmin.pages.statictis',['danhsach'=>$danhsach,'job_id'=>$listjob,'count'=>$count]);
-		}
+		return view('statictis',['danhsach'=>$danhsach,'job_id'=>$listjob,'count'=>$count]);
 	}
 	public function getStatictisadmin($id)
 	{
@@ -455,7 +448,7 @@ class ShortcuturlController extends Controller
 		$id=(int)$id;
 		$danhsachid=Shortcut_url::where('iduser_create',$id)->orderBy('created_at','DESC')->paginate(10);
 		$count=$danhsachid->count();
-		return view('admin.pages.statictis',['danhsach'=>$danhsachid,'job_id'=>$listjob,'count'=>$count]);
+		return view('statictis',['danhsach'=>$danhsachid,'job_id'=>$listjob,'count'=>$count]);
 	}
 	public function deleteUrl($id)
 	    {
@@ -472,14 +465,7 @@ class ShortcuturlController extends Controller
 		$iduser=Auth::user()->id;
 		$danhsach=Shortcut_url::where('iduser_create',$iduser)->where('wait_check',1)->where('source',1)->orderBy('created_at','DESC')->paginate(10);
 		$count=$danhsach->count();
-		if(Auth::user()->role_id==0)
-		{
-			return view('users.pages.statictis_seeder',['job_id'=>$listjob,'danhsach'=>$danhsach,'count'=>$count]);
-		}
-		else
-		{
-			return view('subadmin.pages.statictis_seeder',['job_id'=>$listjob,'danhsach'=>$danhsach,'count'=>$count]);
-		}
+		return view('statictis_seeder',['job_id'=>$listjob,'danhsach'=>$danhsach,'count'=>$count]);
 	}
 	public function getListcheck()
 	{
@@ -493,26 +479,13 @@ class ShortcuturlController extends Controller
 		$track =Shortcut_url::where('wait_check',1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
 		$count=count($track);
 		$category =Category::all();
-		if(Auth::user()->role_id==1)
-		{
-			return view('admin.pages.trackcampaign',['track'=>$track,'category'=>$category,'count'=>$count]);
-		}
-		else
-		{
-			return view('subadmin.pages.trackcampaign',['track'=>$track,'category'=>$category,'count'=>$count]);
-		}
+		return view('trackcampaign',['track'=>$track,'category'=>$category,'count'=>$count]);
 	}
 	public function affiliateTrack()
 	{
 		$track1 =Shortcut_url::where('wait_check',1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
-		if(Auth::user()->role_id==1)
-		{
-			return view('admin.pages.affiliatetrack',['track1'=>$track1]);
-		}
-		else
-		{	$user=User::all();
-			return view('subadmin.pages.affiliatetrack',['track1'=>$track1,'user'=>$user]);
-		}
+		$user=User::all();
+		return view('affiliatetrack',['track1'=>$track1,'user'=>$user]);
 		
 	}
 }

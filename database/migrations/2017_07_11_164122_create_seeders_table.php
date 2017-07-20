@@ -15,7 +15,7 @@ class CreateSeedersTable extends Migration
     {
         Schema::create('seeders', function (Blueprint $table) {
             $table->increments('id');
-            $table->int('idshortcut');
+            $table->string('shortcut_url');
             $table->string('referer');
             $table->int('count_click');
             $table->timestamps();

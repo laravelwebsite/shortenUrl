@@ -1,4 +1,4 @@
-@extends('subadmin.layout.index')
+@extends('index')
 @section('title')
 Thống kê
 @endsection
@@ -61,7 +61,7 @@ Thống kê
                     <td><span>{{$ds->created_at}}</span></td>
                     <td class="text-center">
                       <span class="label label-primary label-mini">
-                        <a href="subadmin/statictis-details/{{$ds->shortcut_url}}" style="color:white;">{{$ds->count_click}}</a>
+                        <a href="user/statictis-details/{{$ds->shortcut_url}}" style="color:white;">{{$ds->count_click}}</a>
                       </span>
                     </td>
                     <td class="text-center">

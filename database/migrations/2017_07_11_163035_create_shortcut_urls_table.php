@@ -16,14 +16,21 @@ class CreateShortcutUrlsTable extends Migration
         Schema::create('shortcut_urls', function (Blueprint $table) {
             $table->increments('id');
             $table->string('shortcut_url');
-            $table->string('redirect');
-            $table->int('iduser_create');
+            $table->string('category_id');
             $table->string('purpose');
-            $table->int('count_click');
+            $table->int('iduser_create');
             $table->string('email_user');
-            $table->string('category');
-            $table->int('job_id');
+            $table->int('wait_check');
+            $table->int('count_click');
             $table->int('source');
+            $table->string('job_id');
+            $table->string('redirect');
+            $table->string('fileupload_name');
+            $table->string('title');
+            $table->string('region');
+            $table->text('description');
+            $table->string('date_begin_seeder');
+            $table->int('id_user_seeder');
             $table->timestamps();
         });
     }

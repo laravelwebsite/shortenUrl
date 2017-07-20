@@ -1,4 +1,4 @@
-@extends('subadmin.layout.index')
+@extends('index')
 @section('title')
 Tracking Campaign | Shorten Link
 @endsection
@@ -60,11 +60,11 @@ Tracking Campaign | Shorten Link
                       <td><span>{{$tr->job_id}}</span></td>
                       <td><span <?=$tr->email_user == 'Applancer' ? $tr->email_user : 'style="color:red;"'; ?>><?=strlen($tr->user->name) ? $tr->user->name : 'Applancer';?></span></td>
                       <td><p><a href="{{$tr->redirect}}" title="{{$tr->redirect}}">{{$shorturl}}</a></p></td>
-                      <td><span>{{$tr->category}}</span></td>
+                      <td><span>{{$tr->category['categoryname']}}</span></td>
                       <td><span>{{$tr->created_at->format('d-m-Y')}}</span></td>
                       <td><span>{{$tr->date_begin_seeder}}</span></td>
                       <td class="text-center">
-                        <a href="subadmin/statictis-details/{{$tr->shortcut_url}}" ><span class="label label-primary label-mini tooltips" data-placement="top" data-original-title="Xem thống kê chi tiết lượt click.">{{$tr->count_click}}</span></a>
+                        <a href="admin/statictis-details/{{$tr->shortcut_url}}" ><span class="label label-primary label-mini tooltips" data-placement="top" data-original-title="Xem thống kê chi tiết lượt click.">{{$tr->count_click}}</span></a>
                       </td>
                       <td class="text-center">
                           <?php 
@@ -90,7 +90,8 @@ Tracking Campaign | Shorten Link
                 <div class="row-fluid">
                   <div class="col-sm-3 col-md-3 col-lg-3">
                     <div class="dataTables_info">
-                    <p></p><ul><li>{{$tr->count()}} results</li></ul><p></p>
+                    <p></p><ul><li>{{$count}} results
+                    </li></ul><p></p>
                     </div>
                   </div>
                   <div class="col-sm-9 col-md-9 col-lg-9">
@@ -138,7 +139,7 @@ Tracking Campaign | Shorten Link
               var value = $(this).val();
               var valuecate=$("#category").val();
               $.ajax({
-                  url: 'admin/searchwithjob/',
+                  url: 'admin/searchwithjobTrackcampaign/',
                   type:"GET", 
                   cache:false,
                   data: {
@@ -148,18 +149,18 @@ Tracking Campaign | Shorten Link
                   headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                   async: true,
                   success: function(response){
-                    if(response=="fail")
-                    {
-                      alert("Vui lòng nhập Số để tìm!!");
-                    }
+                   	if(response=="fail")
+                   	{
+                   		alert("Vui lòng nhập Số để tìm!!");
+                   	}
                       else if(response=="notfound")
                       {
                           $("#contentajax").html("<div class='alert alert-danger'><strong>Không tìm thấy dữ liệu</strong></div>");
                       }
                    else
-                    {
-                      $("#contentajax").html(response);
-                    }
+                   	{
+                   		$("#contentajax").html(response);
+                   	}
                   }
               });
             });   
@@ -169,7 +170,7 @@ Tracking Campaign | Shorten Link
                 var valuecate=$(this).val();
                 var valuejob = $('#jobsearch').val();
                 $.ajax({
-                  url: 'admin/searchwithjob/',
+                  url: 'admin/searchwithjobTrackcampaign/',
                   type:"GET", 
                   cache:false,
                   data: {
@@ -194,10 +195,10 @@ Tracking Campaign | Shorten Link
                   }
               });
             });
-            
 
-            $('.btn-del-record').click(function(event) {
+           $('.btn-del-record').click(function(event) {
               var flagId = $(this).attr('id');
+              
               $("input[name=idRecord]").val(flagId);
             });
             $('.btn-delete').click(function(event) {
@@ -217,7 +218,6 @@ Tracking Campaign | Shorten Link
                   }
               });
             });   
-           
 
       });
     </script>

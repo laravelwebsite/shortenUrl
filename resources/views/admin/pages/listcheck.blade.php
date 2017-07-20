@@ -1,4 +1,4 @@
-@extends('admin.layout.index')
+@extends('index')
 @section('title')
 Tạo link Admin
 @endsection

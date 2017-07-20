@@ -11,14 +11,7 @@ class MessagerController extends Controller
     public function getMessager()
     {
     	$messager=Messager::where('email_user',Auth::user()->email)->paginate(10);
-    	if(Auth::user()->role_id==0)
-    	{
-    		return view('users.pages.messager',['messager'=>$messager]);
-    	}
-    	else
-    	{
-    		return view('subadmin.pages.messager',['messager'=>$messager]);
-    	}
+    	return view('messager',['messager'=>$messager]);
     }
     public function sentmessenger()
     {

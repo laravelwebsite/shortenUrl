@@ -1,4 +1,4 @@
-@extends('users.layout.index')
+@extends('index')
 @section('title')
 Thống kê chi tiết 
 @endsection
@@ -57,7 +57,7 @@ Thống kê chi tiết
                             </tr>
                           </thead>
                           <tbody>
-                           <?php  $sttd= 1;?>
+                          <?php  $sttd= 1;?>
                           @foreach($dmy_statictis as $dmy)
                           @if(!isset($dmy->date_week) && !isset($dmy->date_month))
                             <tr>
@@ -89,7 +89,7 @@ Thống kê chi tiết
                             </tr>
                           </thead>
                           <tbody>
-                             <?php  $sttw= 1;?>
+                            <?php  $sttw= 1;?>
                           @foreach($dmy_statictis as $dmy)
                           @if(!isset($dmy->date_statistic) && !isset($dmy->date_month))
                             <tr>
@@ -121,7 +121,7 @@ Thống kê chi tiết
                             </tr>
                           </thead>
                           <tbody>
-                          <?php  $sttm= 1;?>
+                            <?php  $sttm= 1;?>
                           @foreach($dmy_statictis as $dmy)
                           @if(!isset($dmy->date_statistic) && !isset($dmy->date_week))
                             <tr>

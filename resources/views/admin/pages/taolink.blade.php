@@ -1,4 +1,4 @@
-@extends('admin.layout.index')
+@extends('index')
 @section('title')
 Tạo link Admin
 @endsection
@@ -52,7 +52,11 @@ Tạo link Admin
             <div class="col-lg-10">
               <select class="form-control m-bot15" name="category" id="category">
                 @foreach($category as $cate)
-                      <option value="{{$cate->id}}" >{{$cate->categoryname}}</option>
+                      <option value="{{$cate->id}}" 
+                        @if($cate->id==9)
+                              {{'selected'}}
+                          @endif
+                      >{{$cate->categoryname}}</option>
                 @endforeach
               </select>
             </div>

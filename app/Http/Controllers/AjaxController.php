@@ -190,7 +190,7 @@ class AjaxController extends Controller
                         $id=$idlinkss+1;
                         $links->id=$id;
                         $links->shortcut_url=$inforurl->shortcut_url;
-                        $links->category=$inforurl->category;
+                        $links->category_id=$inforurl->category_id;
                         $links->purpose=$inforurl->purpose;
                         $links->iduser_create=Auth::user()->id;
                         $links->email_user   = Auth::user()->email;
@@ -246,7 +246,7 @@ class AjaxController extends Controller
                                     $id=$idlinkss+1;
                                     $links->id=$id;
                                     $links->shortcut_url=$inforurl->shortcut_url;
-                                    $links->category=$inforurl->category;
+                                    $links->category_id=$inforurl->category_id;
                                     $links->purpose=$inforurl->purpose;
                                     $links->iduser_create=Auth::user()->id;
                                     $links->email_user   = Auth::user()->email;
@@ -273,19 +273,20 @@ class AjaxController extends Controller
         }
 
 
-        public function searchwithjob(Request $request)
+        public function searchwithjobTrackcampaign(Request $request)
         {
 
             if($request->ajax())
             {
-                $key=(int)$request->key;
-                $key1=$request->key1;
+                $key=$request->key;
+                $key1=(int)$request->key1;
             //neu la nhap vao la so hoac khong nhap gi
                 if(is_numeric($key) || $request->key=="")
                 {
                 //co nhap vao id
                     if(is_numeric($key))
                     {
+
                         if($key1=="All")
                         {
                             $urlajax=Shortcut_url::where('job_id',$key)->where('wait_check',1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
@@ -293,7 +294,7 @@ class AjaxController extends Controller
                         else
                         {
                             
-                            $urlajax=Shortcut_url::where('job_id',$key)->where('category_id',$key1)->where('wait_check',1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
+                            $urlajax=Shortcut_url::where('job_id',$key)->where('wait_check',1)->where('category_id',$key1)->where('source',0)->orderBy('updated_at','DESC')->paginate(10);
                         }
                     }
                 //khong nhap gi
@@ -310,7 +311,7 @@ class AjaxController extends Controller
                     }
                     $urlajax->withPath('admin/trackCampaign');
                     $stt = 1;
-                    if(count($urlajax)>0)
+                    if($urlajax->count()>0)
                     {
                         echo '
                         <section class="panel">
@@ -350,7 +351,7 @@ class AjaxController extends Controller
 
                                   echo '</span></td>
                                   <td><p><a href="'.$tr->redirect.'" title="'.$tr->redirect.'">'.$shorturl.'</a></p></td>
-                                  <td><span>'.$tr->category.'</span></td>
+                                  <td><span>'.$tr->category['categoryname'].'</span></td>
                                   <td><span>'.$tr->created_at->format('d-m-Y').'</span></td>
                                   <td><span>'.$tr->date_begin_seeder.'</span></td>
                                   <td class="text-center">
@@ -412,6 +413,7 @@ class AjaxController extends Controller
                     }
 
                 }
+
                 else
                 {
 
@@ -424,7 +426,7 @@ class AjaxController extends Controller
         {
             if($request->ajax())
             {
-                $jobid=(int)$request->job;
+                $jobid=$request->job;
                 $datefrom="";
                 $dateto="";
                 $emailsearch=$request->emailsearch;
@@ -645,6 +647,7 @@ class AjaxController extends Controller
                         echo "notfound";
                     }
                 }
+
                 else
                 {
                     echo "fail";
@@ -652,5 +655,98 @@ class AjaxController extends Controller
             }
         }
 
+        public function searchwithjobStatictis(Request $request)
+        {
+            if($request->ajax())
+            {
+                $idjob=$request->key;
 
+                 if(is_numeric($idjob) || $idjob=="N/A")
+                 {
+                    if($idjob=="N/A")
+                    {
+                        $url=Shortcut_url::where('source',0)->where('iduser_create',Auth::user()->id)->paginate(10);
+                    }
+                    else
+                    {
+                        $url=Shortcut_url::where('source',0)->where('iduser_create',Auth::user()->id)->where('job_id',$idjob)->paginate(10);
+                    }
+                    
+                    if($url->count()>0)
+                    {
+                            echo '<table class="table table-hover display table-bordered">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th><i class="fa fa-bookmark"></i> Job ID</th>
+                                <th><i class=" fa fa-link"></i> Link rút gọn</th>
+                                <th><i class="fa fa-user"></i> Mục đích</th>                    
+                                <th><i class=" fa fa-calendar"></i> Ngày bắt đầu seeder</th>
+                                <th class="text-center"><i class="fa fa-bar-chart-o"></i> Thống kê</th>
+                                <th class="text-center"><i class=" fa fa-check-square"></i> Aplly</th>
+                                <th class="text-center"><i class=" fa fa-edit"></i> </th>
+                              </tr>
+                            </thead>
+                            <tbody>';
+                                $stt=1;
+                                foreach($url as $ds)
+                                {
+                                    echo '<tr>
+                                    <td><span>'.$stt++.'</span></td>
+                                    <td><span>'.$ds->job_id.'</span></td>
+                                    <td><p><a href="'.$ds->redirect.'">'.$_SERVER['SERVER_NAME'].'/'.$ds->shortcut_url.'</a></p></td>
+                                    <td><span>'.$ds->purpose.'</span>';
+                                      if($ds->source==1) 
+                                      {
+                                        echo '<br><span style="color:red; font-weight: bold; display: block; text-align: center;">Affiliate Tracking</span>';
+                                      }
+                                    echo '</td>
+                                    <td><span>'.$ds->date_begin_seeder.'</span></td>
+                                    <td class="text-center">
+                                      <span class="label label-primary label-mini">
+                                        <a href="user/statictis-details/'.$ds->shortcut_url.'" style="color:white;">'.$ds->count_click.'</a>
+                                      </span>
+                                    </td>
+                                    <td class="text-center">
+                                          <span class="label label-success label-mini text-center" style="display:inline-block;">
+                                          <small>
+                                                  <img src="style-shorten/img/input-spinner.gif">
+                                                </small>
+                                          </span>
+                                    </td>
+                                    <td class="text-center">
+                                     
+                                      <a class="btn btn-default btn-xs tooltips btn-content-seeder" data-placement="top" data-original-title="Xem thông tin seeder." data-flagId="'.$ds->id.'" data-toggle="modal" href="#contentSeeder"><i class="fa fa-eye "></i></a>
+                                      <a class="btn btn-danger btn-xs tooltips btn-del-record" id="'.$ds->id.'" data-toggle="modal" data-placement="top" data-original-title="Delete record." href="#recordDel"><i class="fa fa-trash-o "></i></a>
+                                    </td>
+                                  </tr>';
+                                }
+                                echo ' </tbody>
+                                              </table>
+                                              <div class="row-fluid">
+                                                <div class="col-sm-3 col-md-3 col-lg-3">
+                                                 <div class="dataTables_info">
+                                                  <p><ul><li>'.$url->count().' results</li></ul></p>
+                                                  </div>
+                                                </div>
+                                                <div class="col-sm-9 col-md-9 col-lg-9">
+                                                <div class="dataTables_paginate paging_bootstrap pagination">
+                                                    <ul>
+                                                    '.$url->links().'
+                                                  </ul>
+                                                  </div>
+                                                </div>
+                                              </div>';
+                    }
+                    else
+                    {
+                        echo "notfound";
+                    }
+                 }
+                 else
+                 {
+                    echo "fail";
+                 }
+            }
+        }
     }

@@ -1,4 +1,4 @@
-@extends('subadmin.layout.index')
+@extends('index')
 @section('title')
 Tracking Campaign | Shorten Link
 @endsection

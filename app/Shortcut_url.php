@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 use App\User;
+use App\Category;
 class Shortcut_url extends Eloquent
 {
     protected $connection="mongodb";
@@ -17,6 +18,6 @@ class Shortcut_url extends Eloquent
     }
     public function category()
     {
-    	return $this->belongsTo(Category::class,'category_id','id','id');
+    	return $this->belongsTo(Category::class,'category_id','id');
     }
 }
